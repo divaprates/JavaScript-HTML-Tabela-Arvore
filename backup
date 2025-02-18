@@ -1,0 +1,209 @@
+function criarLinhaTabela(data) {
+    var table = document.createElement('table');
+    table.classList.add('table');
+
+    // Itera sobre os dados para criar as colunas
+    data.forEach(function(item) {
+        var linha = document.createElement('tr');
+        linha.classList.add('row');
+    
+        // Cria uma div para representar a coluna 1
+        var coluna1 = document.createElement('td');
+        coluna1.classList.add('col');
+        coluna1.textContent = item.dado; // Define o texto da coluna 1
+
+        // Adiciona a coluna 1 à linha
+        linha.appendChild(coluna1);
+
+        // Cria uma div para representar a coluna 2
+        var coluna2 = document.createElement('td');
+        coluna2.classList.add('col');
+        coluna2.textContent = item.nome; // Define o texto da coluna 2
+
+        // Adiciona a coluna 2 à linha
+        linha.appendChild(coluna2);
+        table.appendChild(linha);
+
+        if (item.filho != undefined && item.filho != null) {
+            var linha2 = document.createElement('tr');
+            linha2.classList.add('row');
+            var coluna3 = document.createElement('td');
+            coluna3.classList.add('col', 'margem');
+
+            linha2.appendChild(coluna3);
+
+            coluna3.appendChild(criarLinhaTabela(item.filho));
+            table.appendChild(linha2);
+        }
+    });
+
+    return table;
+}
+
+// Exemplo de uso
+var dados = [
+    { dado: '1', nome: 'banana', filho: [
+        { dado: '4', nome: 'uva' },
+        { dado: '5', nome: 'maracujá', filho: [
+            { dado: '7', nome: 'melancia' },
+        ]}
+    ] },
+    { dado: '2', nome: 'morango' },
+    { dado: '3', nome: 'jabuticaba', filho: [
+        { dado: '6', nome: 'maça' },
+        { dado: '7', nome: 'caju'}
+    ] }
+];
+var linhaTabela = criarLinhaTabela(dados);
+
+// Adiciona a linha à tabela (supondo que você tenha uma div com a classe "tabela" onde deseja adicionar a linha)
+document.querySelector('.tabela').appendChild(linhaTabela);
+
+function criarLinhaTabela(data, margin) {
+    var tbody = document.createDocumentFragment();
+
+    // linhaT.innerHTML = '<th class="col">Dado</th> <th class="col">Nome</th>';
+
+    // Itera sobre os dados para criar as colunas
+    data.forEach(function(item) {
+        var linha = document.createElement('tr');
+        linha.classList.add('row');
+    
+        // Cria uma div para representar a coluna 1
+        var coluna1 = document.createElement('td');
+        coluna1.classList.add('col-6');
+        coluna1.textContent = item.dado; // Define o texto da coluna 1
+
+        // Adiciona a coluna 1 à linha
+        linha.appendChild(coluna1);
+
+        // Cria uma div para representar a coluna 2
+        var coluna2 = document.createElement('td');
+        coluna2.classList.add('col');
+        coluna2.textContent = item.nome; // Define o texto da coluna 2
+
+        // Adiciona a coluna 2 à linha
+        linha.appendChild(coluna2);
+        tbody.appendChild(linha);
+
+        if (item.filho != undefined && item.filho != null) {
+            var coluna3 = document.createElement('td');
+            coluna3.classList.add('col-1');
+            coluna3.textContent = ">>";
+            linha.appendChild(coluna3);
+
+            var linhaf = document.createElement('tr');
+            linhaf.classList.add('row');
+        
+            // Cria uma div para representar a coluna 1
+            var colunaf = document.createElement('td');
+            colunaf.classList.add('col');
+            
+            colunaf.appendChild(criarLinhaTabela(item.filho, margin+10));
+            linhaf.appendChild(colunaf);
+            tbody.appendChild(linhaf);
+        }
+    });
+
+    return tbody;
+}
+
+// Exemplo de uso
+var dados = [
+    { dado: '1', nome: 'banana', filho: [
+        { dado: '4', nome: 'uva' },
+        { dado: '5', nome: 'maracujá', filho: [
+            { dado: '7', nome: 'melancia' },
+        ]}
+    ] },
+    { dado: '2', nome: 'morango' },
+    { dado: '3', nome: 'jabuticaba', filho: [
+        { dado: '6', nome: 'maça' },
+        { dado: '7', nome: 'caju'}
+    ] }
+];
+var linhaTabela = criarLinhaTabela(dados, 0);
+
+// Adiciona a linha à tabela (supondo que você tenha uma div com a classe "tabela" onde deseja adicionar a linha)
+document.querySelector('.tabela').appendChild(linhaTabela);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function criarLinhaTabela(data, nome) {
+    var ul = document.createElement('ul');
+    ul.classList.add(nome);
+    // linhaT.innerHTML = '<th class="col">Dado</th> <th class="col">Nome</th>';
+
+    // Itera sobre os dados para criar as colunas
+    data.forEach(function(item) {
+        var linha = document.createElement('li');
+        linha.classList.add('row');
+        linha.setAttribute('id', item.nome);
+
+        // Cria uma div para representar a coluna 1
+        var coluna1 = document.createElement('td');
+        coluna1.classList.add('col-6');
+        coluna1.textContent = item.dado; // Define o texto da coluna 1
+
+        // Adiciona a coluna 1 à linha
+        linha.appendChild(coluna1);
+
+        // Cria uma div para representar a coluna 2
+        var coluna2 = document.createElement('td');
+        coluna2.classList.add('col');
+        coluna2.textContent = item.nome; // Define o texto da coluna 2
+
+        // Adiciona a coluna 2 à linha
+        linha.appendChild(coluna2);
+        ul.appendChild(linha);
+
+        if (item.filho != undefined && item.filho != null) {
+            var coluna3 = document.createElement('td');
+            coluna3.classList.add('col-1');
+            coluna3.textContent = ">>";
+            linha.appendChild(coluna3);
+
+            linha.addEventListener( 'click', function() {
+                l = linha.getAttribute('id');
+                console.log('show: ', l);
+                document.querySelector('.'+l).hidden = !document.querySelector('.'+l).hidden;
+            });
+            
+            ul.appendChild(criarLinhaTabela(item.filho, item.nome));
+        }
+    });
+
+    return ul;
+}
+
+// Exemplo de uso
+var dados = [
+    { dado: '1', nome: 'banana', filho: [
+        { dado: '4', nome: 'uva' },
+        { dado: '5', nome: 'maracujá', filho: [
+            { dado: '7', nome: 'melancia' },
+        ]}
+    ] },
+    { dado: '2', nome: 'morango' },
+    { dado: '3', nome: 'jabuticaba', filho: [
+        { dado: '6', nome: 'maça' },
+        { dado: '7', nome: 'caju'}
+    ] }
+];
+var linhaTabela = criarLinhaTabela(dados, null);
+
+// Adiciona a linha à tabela (supondo que você tenha uma div com a classe "tabela" onde deseja adicionar a linha)
+document.querySelector('.tabela').appendChild(linhaTabela);
